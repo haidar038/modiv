@@ -6,3 +6,5 @@ export const formatIDR = (amount: number): string => {
     maximumFractionDigits: 0,
   }).format(amount);
 };
+
+export const formatCurrency = formatIDR;
