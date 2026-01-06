@@ -105,7 +105,7 @@ const Categories = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Kategori</h1>
                     <p className="text-muted-foreground">Kelola kategori item acara</p>
@@ -157,33 +157,35 @@ const Categories = () => {
                     ) : categories.length === 0 ? (
                         <p className="text-center py-8 text-muted-foreground">Belum ada kategori. Buat kategori pertama Anda.</p>
                     ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Nama</TableHead>
-                                    <TableHead>Urutan Tampilan</TableHead>
-                                    <TableHead className="w-[100px]">Aksi</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {categories.map((category) => (
-                                    <TableRow key={category.id}>
-                                        <TableCell className="font-medium">{category.name}</TableCell>
-                                        <TableCell>{category.display_order}</TableCell>
-                                        <TableCell>
-                                            <div className="flex gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() => openDialog(category)}>
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(category.id)}>
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Nama</TableHead>
+                                        <TableHead>Urutan Tampilan</TableHead>
+                                        <TableHead className="w-[100px]">Aksi</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {categories.map((category) => (
+                                        <TableRow key={category.id}>
+                                            <TableCell className="font-medium">{category.name}</TableCell>
+                                            <TableCell>{category.display_order}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-2">
+                                                    <Button variant="ghost" size="icon" onClick={() => openDialog(category)}>
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(category.id)}>
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

@@ -179,12 +179,12 @@ const Inquiries = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Permintaan</h1>
                     <p className="text-muted-foreground">Lihat dan kelola permintaan pelanggan</p>
                 </div>
-                <Button variant="outline" onClick={handleExportCSV} disabled={inquiries.length === 0}>
+                <Button variant="outline" onClick={handleExportCSV} disabled={inquiries.length === 0} className="w-full sm:w-auto">
                     <FileDown className="mr-2 h-4 w-4" />
                     Ekspor CSV
                 </Button>
@@ -202,53 +202,55 @@ const Inquiries = () => {
                     ) : inquiries.length === 0 ? (
                         <p className="text-center py-8 text-muted-foreground">Belum ada permintaan.</p>
                     ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Pelanggan</TableHead>
-                                    <TableHead>Tanggal Acara</TableHead>
-                                    <TableHead>Total</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Dibuat</TableHead>
-                                    <TableHead className="w-[100px]">Aksi</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {inquiries.map((inquiry) => (
-                                    <TableRow key={inquiry.id}>
-                                        <TableCell>
-                                            <div>
-                                                <div className="font-medium">{inquiry.customer_name}</div>
-                                                {inquiry.email && <div className="text-sm text-muted-foreground">{inquiry.email}</div>}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{inquiry.event_date ? format(new Date(inquiry.event_date), "MMM d, yyyy") : "-"}</TableCell>
-                                        <TableCell className="font-medium">{formatCurrency(inquiry.total)}</TableCell>
-                                        <TableCell>
-                                            <Select value={inquiry.status} onValueChange={(value) => updateStatus(inquiry.id, value)}>
-                                                <SelectTrigger className="w-[130px]">
-                                                    <Badge variant="outline" className={statusColors[inquiry.status] || ""}>
-                                                        {inquiry.status}
-                                                    </Badge>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="pending">Tertunda</SelectItem>
-                                                    <SelectItem value="contacted">Dihubungi</SelectItem>
-                                                    <SelectItem value="completed">Selesai</SelectItem>
-                                                    <SelectItem value="cancelled">Dibatalkan</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground">{format(new Date(inquiry.created_at), "MMM d, yyyy")}</TableCell>
-                                        <TableCell>
-                                            <Button variant="ghost" size="icon" onClick={() => viewInquiry(inquiry)}>
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Pelanggan</TableHead>
+                                        <TableHead>Tanggal Acara</TableHead>
+                                        <TableHead>Total</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Dibuat</TableHead>
+                                        <TableHead className="w-[100px]">Aksi</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {inquiries.map((inquiry) => (
+                                        <TableRow key={inquiry.id}>
+                                            <TableCell>
+                                                <div>
+                                                    <div className="font-medium">{inquiry.customer_name}</div>
+                                                    {inquiry.email && <div className="text-sm text-muted-foreground">{inquiry.email}</div>}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{inquiry.event_date ? format(new Date(inquiry.event_date), "MMM d, yyyy") : "-"}</TableCell>
+                                            <TableCell className="font-medium">{formatCurrency(inquiry.total)}</TableCell>
+                                            <TableCell>
+                                                <Select value={inquiry.status} onValueChange={(value) => updateStatus(inquiry.id, value)}>
+                                                    <SelectTrigger className="w-[130px]">
+                                                        <Badge variant="outline" className={statusColors[inquiry.status] || ""}>
+                                                            {inquiry.status}
+                                                        </Badge>
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="pending">Tertunda</SelectItem>
+                                                        <SelectItem value="contacted">Dihubungi</SelectItem>
+                                                        <SelectItem value="completed">Selesai</SelectItem>
+                                                        <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground">{format(new Date(inquiry.created_at), "MMM d, yyyy")}</TableCell>
+                                            <TableCell>
+                                                <Button variant="ghost" size="icon" onClick={() => viewInquiry(inquiry)}>
+                                                    <Eye className="h-4 w-4" />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

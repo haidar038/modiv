@@ -109,7 +109,7 @@ const Templates = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Template</h1>
                     <p className="text-muted-foreground">Kelola template acara</p>
@@ -165,43 +165,45 @@ const Templates = () => {
                     ) : templates.length === 0 ? (
                         <p className="text-center py-8 text-muted-foreground">Belum ada template. Buat template pertama Anda.</p>
                     ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[60px]">Gambar</TableHead>
-                                    <TableHead>Nama</TableHead>
-                                    <TableHead>Deskripsi</TableHead>
-                                    <TableHead className="w-[100px]">Aksi</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {templates.map((template) => (
-                                    <TableRow key={template.id}>
-                                        <TableCell>
-                                            {template.image_url ? (
-                                                <img src={template.image_url} alt={template.name} className="h-10 w-10 rounded object-cover" />
-                                            ) : (
-                                                <div className="h-10 w-10 rounded bg-secondary flex items-center justify-center">
-                                                    <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                                                </div>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="font-medium">{template.name}</TableCell>
-                                        <TableCell className="max-w-[300px] truncate">{template.description || "-"}</TableCell>
-                                        <TableCell>
-                                            <div className="flex gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() => openDialog(template)}>
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(template.id)}>
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[60px]">Gambar</TableHead>
+                                        <TableHead>Nama</TableHead>
+                                        <TableHead>Deskripsi</TableHead>
+                                        <TableHead className="w-[100px]">Aksi</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {templates.map((template) => (
+                                        <TableRow key={template.id}>
+                                            <TableCell>
+                                                {template.image_url ? (
+                                                    <img src={template.image_url} alt={template.name} className="h-10 w-10 rounded object-cover" />
+                                                ) : (
+                                                    <div className="h-10 w-10 rounded bg-secondary flex items-center justify-center">
+                                                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                                                    </div>
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="font-medium">{template.name}</TableCell>
+                                            <TableCell className="max-w-[300px] truncate">{template.description || "-"}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-2">
+                                                    <Button variant="ghost" size="icon" onClick={() => openDialog(template)}>
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(template.id)}>
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

@@ -186,7 +186,7 @@ const Items = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Item</h1>
                     <p className="text-muted-foreground">Kelola item dan harga acara</p>
@@ -271,50 +271,52 @@ const Items = () => {
                     ) : items.length === 0 ? (
                         <p className="text-center py-8 text-muted-foreground">Belum ada item. Buat item pertama Anda.</p>
                     ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[60px]">Gambar</TableHead>
-                                    <TableHead>Nama</TableHead>
-                                    <TableHead>Kategori</TableHead>
-                                    <TableHead>Harga</TableHead>
-                                    <TableHead>Satuan</TableHead>
-                                    <TableHead className="w-[140px]">Aksi</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {items.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell>
-                                            {item.image_url ? (
-                                                <img src={item.image_url} alt={item.name} className="h-10 w-10 rounded object-cover" />
-                                            ) : (
-                                                <div className="h-10 w-10 rounded bg-secondary flex items-center justify-center">
-                                                    <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                                                </div>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="font-medium">{item.name}</TableCell>
-                                        <TableCell>{item.categories?.name || "-"}</TableCell>
-                                        <TableCell>{formatCurrency(item.price)}</TableCell>
-                                        <TableCell>{item.unit}</TableCell>
-                                        <TableCell>
-                                            <div className="flex gap-1">
-                                                <Button variant="ghost" size="icon" onClick={() => viewPriceHistory(item)} title="Lihat Riwayat Harga">
-                                                    <History className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" onClick={() => openDialog(item)}>
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item.id)}>
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </TableCell>
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[60px]">Gambar</TableHead>
+                                        <TableHead>Nama</TableHead>
+                                        <TableHead>Kategori</TableHead>
+                                        <TableHead>Harga</TableHead>
+                                        <TableHead>Satuan</TableHead>
+                                        <TableHead className="w-[140px]">Aksi</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {items.map((item) => (
+                                        <TableRow key={item.id}>
+                                            <TableCell>
+                                                {item.image_url ? (
+                                                    <img src={item.image_url} alt={item.name} className="h-10 w-10 rounded object-cover" />
+                                                ) : (
+                                                    <div className="h-10 w-10 rounded bg-secondary flex items-center justify-center">
+                                                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                                                    </div>
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="font-medium">{item.name}</TableCell>
+                                            <TableCell>{item.categories?.name || "-"}</TableCell>
+                                            <TableCell>{formatCurrency(item.price)}</TableCell>
+                                            <TableCell>{item.unit}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-1">
+                                                    <Button variant="ghost" size="icon" onClick={() => viewPriceHistory(item)} title="Lihat Riwayat Harga">
+                                                        <History className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" onClick={() => openDialog(item)}>
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(item.id)}>
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     )}
                 </CardContent>
             </Card>

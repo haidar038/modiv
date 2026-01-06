@@ -291,9 +291,9 @@ const TemplateItems = () => {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid gap-6 lg:grid-cols-4">
+                <div className="grid gap-6 grid-cols-1 lg:grid-cols-4">
                     {/* Template Selector */}
-                    <Card className="lg:col-span-1">
+                    <Card>
                         <CardHeader>
                             <CardTitle className="text-lg">Templates</CardTitle>
                         </CardHeader>
@@ -313,7 +313,7 @@ const TemplateItems = () => {
 
                     {/* Template Items */}
                     <Card className="lg:col-span-3">
-                        <CardHeader className="flex flex-row items-center justify-between">
+                        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <CardTitle>{selectedTemplate?.name || "Pilih Template"}</CardTitle>
                                 {selectedTemplate && (
@@ -416,44 +416,46 @@ const TemplateItems = () => {
                                     <p className="text-sm text-muted-foreground">Tambahkan item untuk membuat preset template ini.</p>
                                 </div>
                             ) : (
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead className="w-[40px]">
-                                                <Checkbox checked={selectedIds.size === templateItems.length && templateItems.length > 0} onCheckedChange={handleSelectAll} />
-                                            </TableHead>
-                                            <TableHead>Item</TableHead>
-                                            <TableHead>Kategori</TableHead>
-                                            <TableHead>Harga</TableHead>
-                                            <TableHead className="w-[100px]">Jml</TableHead>
-                                            <TableHead className="text-right">Subtotal</TableHead>
-                                            <TableHead className="w-[60px]"></TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {templateItems.map((ti) => (
-                                            <TableRow key={ti.id} className={selectedIds.has(ti.id) ? "bg-secondary/50" : ""}>
-                                                <TableCell>
-                                                    <Checkbox checked={selectedIds.has(ti.id)} onCheckedChange={() => handleSelectItem(ti.id)} />
-                                                </TableCell>
-                                                <TableCell className="font-medium">{ti.items.name}</TableCell>
-                                                <TableCell>
-                                                    <Badge variant="outline">{getCategoryName(ti.items.category_id)}</Badge>
-                                                </TableCell>
-                                                <TableCell>{formatCurrency(ti.items.price)}</TableCell>
-                                                <TableCell>
-                                                    <Input type="number" min={1} value={ti.quantity} onChange={(e) => handleUpdateQuantity(ti.id, Number(e.target.value))} className="w-20 h-8" />
-                                                </TableCell>
-                                                <TableCell className="text-right font-medium">{formatCurrency(ti.items.price * ti.quantity)}</TableCell>
-                                                <TableCell>
-                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemoveItem(ti.id)}>
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </TableCell>
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="w-[40px]">
+                                                    <Checkbox checked={selectedIds.size === templateItems.length && templateItems.length > 0} onCheckedChange={handleSelectAll} />
+                                                </TableHead>
+                                                <TableHead>Item</TableHead>
+                                                <TableHead>Kategori</TableHead>
+                                                <TableHead>Harga</TableHead>
+                                                <TableHead className="w-[100px]">Jml</TableHead>
+                                                <TableHead className="text-right">Subtotal</TableHead>
+                                                <TableHead className="w-[60px]"></TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {templateItems.map((ti) => (
+                                                <TableRow key={ti.id} className={selectedIds.has(ti.id) ? "bg-secondary/50" : ""}>
+                                                    <TableCell>
+                                                        <Checkbox checked={selectedIds.has(ti.id)} onCheckedChange={() => handleSelectItem(ti.id)} />
+                                                    </TableCell>
+                                                    <TableCell className="font-medium">{ti.items.name}</TableCell>
+                                                    <TableCell>
+                                                        <Badge variant="outline">{getCategoryName(ti.items.category_id)}</Badge>
+                                                    </TableCell>
+                                                    <TableCell>{formatCurrency(ti.items.price)}</TableCell>
+                                                    <TableCell>
+                                                        <Input type="number" min={1} value={ti.quantity} onChange={(e) => handleUpdateQuantity(ti.id, Number(e.target.value))} className="w-20 h-8" />
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-medium">{formatCurrency(ti.items.price * ti.quantity)}</TableCell>
+                                                    <TableCell>
+                                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemoveItem(ti.id)}>
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
                             )}
                         </CardContent>
                     </Card>
