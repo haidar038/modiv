@@ -8,6 +8,8 @@ import { useTemplates, useTemplateItems } from "@/hooks/use-templates";
 import { useItems } from "@/hooks/use-items";
 import { useCalculator } from "@/hooks/use-calculator";
 
+import heroBackground from "@/assets/hero-event.jpg";
+
 const features = [
     {
         icon: Calculator,
@@ -63,15 +65,20 @@ const Index = () => {
             <Header />
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden gradient-hero">
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
-                    <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
-                </div>
+            <section
+                className="relative overflow-hidden"
+                style={{
+                    backgroundImage: `url(${heroBackground})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            >
+                {/* Dark overlay for better text readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
 
-                <div className="container relative py-20 lg:py-32">
+                <div className="container relative py-24 lg:py-36">
                     <div className="mx-auto max-w-3xl text-center">
-                        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/20 px-4 py-2 text-sm font-medium text-primary backdrop-blur-sm">
                             <Sparkles className="h-4 w-4" />
                             Produksi Acara Jadi Mudah
                         </div>
@@ -87,7 +94,7 @@ const Index = () => {
                                 Mulai Hitung
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="lg" className="w-full sm:w-auto" onClick={() => document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" })}>
+                            <Button variant="outline" size="lg" className="w-full sm:w-auto backdrop-blur-sm" onClick={() => document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" })}>
                                 Lihat Template
                             </Button>
                         </div>

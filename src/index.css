@@ -14,7 +14,54 @@
 */
 
 @layer base {
+    /* Dark theme as default */
     :root {
+        --background: 222 47% 8%;
+        --foreground: 210 40% 98%;
+
+        --card: 222 47% 11%;
+        --card-foreground: 210 40% 98%;
+
+        --popover: 222 47% 11%;
+        --popover-foreground: 210 40% 98%;
+
+        /* Vibrant Orange - #EA5833 */
+        --primary: 14 81% 56%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 222 47% 15%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 222 47% 18%;
+        --muted-foreground: 215 16% 60%;
+
+        --accent: 222 47% 15%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 222 47% 18%;
+        --input: 222 47% 18%;
+        --ring: 14 81% 56%;
+
+        --radius: 0.75rem;
+
+        /* Custom tokens for dark mode */
+        --slate-50: 222 47% 15%;
+        --slate-100: 222 47% 13%;
+        --slate-200: 222 47% 18%;
+        --orange-glow: 14 81% 65%;
+
+        --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+        --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
+        --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+        --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.4), 0 8px 10px -6px hsl(0 0% 0% / 0.3);
+        --shadow-orange: 0 4px 14px 0 hsl(14 81% 56% / 0.35);
+    }
+
+    /* Light theme option */
+    .light {
         --background: 210 40% 98%;
         --foreground: 222 47% 11%;
 
@@ -24,7 +71,6 @@
         --popover: 0 0% 100%;
         --popover-foreground: 222 47% 11%;
 
-        /* Vibrant Orange - #EA5833 */
         --primary: 14 81% 56%;
         --primary-foreground: 0 0% 100%;
 
@@ -44,9 +90,6 @@
         --input: 214 32% 91%;
         --ring: 14 81% 56%;
 
-        --radius: 0.75rem;
-
-        /* Custom tokens */
         --slate-50: 210 40% 98%;
         --slate-100: 214 32% 96%;
         --slate-200: 214 32% 91%;
