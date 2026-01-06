@@ -27,7 +27,7 @@ const Header = () => {
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
             <div className="container flex h-16 items-center justify-between">
                 <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-                    <img src="/logo/mdv-primary-light.svg" alt="Modiv EventCraft" className="h-9 w-auto" />
+                    <img src="/logo/mdv-primary.svg" alt="Modiv EventCraft" className="h-9 w-auto" />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -68,7 +68,7 @@ const Header = () => {
                     <SheetContent side="right" className="w-[280px]">
                         <SheetHeader>
                             <SheetTitle className="flex items-center gap-2">
-                                <img src="/logo/mdv-primary-light.svg" alt="Modiv EventCraft" className="h-8 w-auto" />
+                                <img src="/logo/mdv-primary.svg" alt="Modiv EventCraft" className="h-8 w-auto" />
                             </SheetTitle>
                         </SheetHeader>
                         <nav className="mt-8 flex flex-col gap-2">
