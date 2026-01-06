@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       categories: {
@@ -43,6 +68,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           name: string
           updated_at: string
         }
@@ -50,6 +76,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           updated_at?: string
         }
@@ -57,6 +84,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           updated_at?: string
         }
@@ -152,11 +180,51 @@ export type Database = {
           },
         ]
       }
+      inquiry_status_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          inquiry_id: string
+          new_status: string
+          notes: string | null
+          old_status: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          inquiry_id: string
+          new_status: string
+          notes?: string | null
+          old_status: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          inquiry_id?: string
+          new_status?: string
+          notes?: string | null
+          old_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_status_history_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       items: {
         Row: {
           category_id: string
           created_at: string
+          description: string | null
           id: string
+          image_url: string | null
           name: string
           price: number
           unit: string
@@ -165,7 +233,9 @@ export type Database = {
         Insert: {
           category_id: string
           created_at?: string
+          description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           price?: number
           unit?: string
@@ -174,7 +244,9 @@ export type Database = {
         Update: {
           category_id?: string
           created_at?: string
+          description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           price?: number
           unit?: string
@@ -186,6 +258,41 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_history: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          item_id: string
+          new_price: number
+          old_price: number
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          item_id: string
+          new_price: number
+          old_price: number
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          item_id?: string
+          new_price?: number
+          old_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_history_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
             referencedColumns: ["id"]
           },
         ]
@@ -414,6 +521,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       app_role: ["admin", "user"],
