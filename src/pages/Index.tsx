@@ -11,18 +11,18 @@ import { useCalculator } from "@/hooks/use-calculator";
 const features = [
     {
         icon: Calculator,
-        title: "Instant Budget Calculation",
-        description: "Get real-time cost estimates as you customize your event requirements",
+        title: "Kalkulasi Anggaran Instan",
+        description: "Dapatkan estimasi biaya secara real-time saat Anda menyesuaikan kebutuhan acara",
     },
     {
         icon: Clock,
-        title: "Quick & Easy",
-        description: "No registration needed. Plan your event budget in just minutes",
+        title: "Cepat & Mudah",
+        description: "Tidak perlu registrasi. Rencanakan anggaran acara Anda dalam hitungan menit",
     },
     {
         icon: Shield,
-        title: "Transparent Pricing",
-        description: "Clear itemized pricing with no hidden fees or surprises",
+        title: "Harga Transparan",
+        description: "Rincian harga yang jelas tanpa biaya tersembunyi atau kejutan",
     },
 ];
 
@@ -73,22 +73,22 @@ const Index = () => {
                     <div className="mx-auto max-w-3xl text-center">
                         <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
                             <Sparkles className="h-4 w-4" />
-                            Event Production Made Simple
+                            Produksi Acara Jadi Mudah
                         </div>
 
                         <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                            Plan Your Event Budget <span className="text-primary">in Minutes</span>
+                            Rencanakan Anggaran Acara Anda <span className="text-primary">dalam Hitungan Menit</span>
                         </h1>
 
-                        <p className="mb-10 text-lg text-muted-foreground sm:text-xl">Select equipment, customize quantities, and get instant pricing for your next seminar, wedding, or concert. No registration required.</p>
+                        <p className="mb-10 text-lg text-muted-foreground sm:text-xl">Pilih peralatan, sesuaikan jumlah, dan dapatkan harga instan untuk seminar, pernikahan, atau konser Anda. Tidak perlu registrasi.</p>
 
                         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                             <Button size="lg" className="w-full shadow-button sm:w-auto" onClick={handleStartFromScratch}>
-                                Start Calculating
+                                Mulai Hitung
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                             <Button variant="outline" size="lg" className="w-full sm:w-auto" onClick={() => document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" })}>
-                                Browse Templates
+                                Lihat Template
                             </Button>
                         </div>
                     </div>
@@ -116,8 +116,8 @@ const Index = () => {
             <section id="templates" className="py-16 lg:py-20 bg-muted/30">
                 <div className="container">
                     <div className="mb-12 text-center">
-                        <h2 className="mb-4 text-3xl font-extrabold text-foreground sm:text-4xl">Choose Your Event Scale</h2>
-                        <p className="mx-auto max-w-2xl text-muted-foreground">Start with a pre-configured template and customize it to match your exact needs, or build from scratch.</p>
+                        <h2 className="mb-4 text-3xl font-extrabold text-foreground sm:text-4xl">Pilih Skala Acara Anda</h2>
+                        <p className="mx-auto max-w-2xl text-muted-foreground">Mulai dengan template yang sudah dikonfigurasi dan sesuaikan dengan kebutuhan Anda, atau buat dari awal.</p>
                     </div>
 
                     {templatesLoading || itemsLoading ? (
@@ -126,9 +126,9 @@ const Index = () => {
                         </div>
                     ) : templates.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-muted-foreground mb-4">No templates available yet.</p>
+                            <p className="text-muted-foreground mb-4">Belum ada template tersedia.</p>
                             <Button onClick={handleStartFromScratch}>
-                                Start from Scratch
+                                Mulai dari Awal
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </div>
@@ -157,10 +157,10 @@ const Index = () => {
             <section className="py-20 lg:py-28">
                 <div className="container">
                     <div className="mx-auto max-w-2xl rounded-3xl bg-gradient-to-br from-primary to-orange-glow p-8 text-center text-primary-foreground shadow-xl sm:p-12">
-                        <h2 className="mb-4 text-2xl font-extrabold sm:text-3xl">Ready to Plan Your Event?</h2>
-                        <p className="mb-8 opacity-90">Get started now and receive a detailed quote within 24 hours.</p>
+                        <h2 className="mb-4 text-2xl font-extrabold sm:text-3xl">Siap Merencanakan Acara Anda?</h2>
+                        <p className="mb-8 opacity-90">Mulai sekarang dan dapatkan penawaran detail dalam 24 jam.</p>
                         <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90" onClick={handleStartFromScratch}>
-                            Start Your Budget Now
+                            Mulai Hitung Anggaran
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
@@ -170,7 +170,7 @@ const Index = () => {
             {/* Footer */}
             <footer className="border-t border-border bg-card py-8">
                 <div className="container text-center">
-                    <p className="text-sm text-muted-foreground">© 2025 Modiv EventCraft. Professional Event Production Services.</p>
+                    <p className="text-sm text-muted-foreground">© 2025 Modiv EventCraft. Layanan Produksi Acara Profesional.</p>
                 </div>
             </footer>
         </div>

@@ -23,10 +23,10 @@ const Header = () => {
                 </Link>
                 <nav className="flex items-center gap-4">
                     <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                        Home
+                        Beranda
                     </Link>
                     <Link to="/calculator" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                        Calculator
+                        Kalkulator
                     </Link>
                     {isAdmin && (
                         <Link to="/admin" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
@@ -36,13 +36,13 @@ const Header = () => {
                     {user ? (
                         <Button variant="ghost" size="sm" onClick={handleSignOut}>
                             <LogOut className="mr-2 h-4 w-4" />
-                            Logout
+                            Keluar
                         </Button>
                     ) : (
                         <Link to="/auth">
                             <Button variant="ghost" size="sm">
                                 <LogIn className="mr-2 h-4 w-4" />
-                                Login
+                                Masuk
                             </Button>
                         </Link>
                     )}

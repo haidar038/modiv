@@ -23,7 +23,7 @@ export function RevenueAreaChart({ data }: RevenueChartProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-lg">Revenue Trend (Last 30 Days)</CardTitle>
+                <CardTitle className="text-lg">Tren Pendapatan (30 Hari Terakhir)</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="h-[300px]">
@@ -45,7 +45,7 @@ export function RevenueAreaChart({ data }: RevenueChartProps) {
                                             <div className="rounded-lg border bg-background p-3 shadow-lg">
                                                 <p className="text-sm font-medium">{payload[0].payload.formattedDate}</p>
                                                 <p className="text-sm text-primary font-bold">{formatCurrency(payload[0].value as number)}</p>
-                                                <p className="text-xs text-muted-foreground">{payload[0].payload.count} inquiries</p>
+                                                <p className="text-xs text-muted-foreground">{payload[0].payload.count} permintaan</p>
                                             </div>
                                         );
                                     }
@@ -71,7 +71,7 @@ export function InquiryStatusPieChart({ data }: StatusChartProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-lg">Inquiry Status Distribution</CardTitle>
+                <CardTitle className="text-lg">Distribusi Status Permintaan</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="h-[250px]">
@@ -88,7 +88,7 @@ export function InquiryStatusPieChart({ data }: StatusChartProps) {
                                         return (
                                             <div className="rounded-lg border bg-background p-2 shadow-lg">
                                                 <p className="text-sm font-medium capitalize">{payload[0].name}</p>
-                                                <p className="text-sm">{payload[0].value} inquiries</p>
+                                                <p className="text-sm">{payload[0].value} permintaan</p>
                                             </div>
                                         );
                                     }
@@ -98,7 +98,7 @@ export function InquiryStatusPieChart({ data }: StatusChartProps) {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-                <p className="text-center text-sm text-muted-foreground mt-2">Total: {total} inquiries</p>
+                <p className="text-center text-sm text-muted-foreground mt-2">Total: {total} permintaan</p>
             </CardContent>
         </Card>
     );
@@ -112,7 +112,7 @@ export function CategoryBarChart({ data }: CategoryChartProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-lg">Revenue by Category</CardTitle>
+                <CardTitle className="text-lg">Pendapatan per Kategori</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="h-[300px]">
@@ -128,7 +128,7 @@ export function CategoryBarChart({ data }: CategoryChartProps) {
                                             <div className="rounded-lg border bg-background p-2 shadow-lg">
                                                 <p className="text-sm font-medium">{payload[0].payload.name}</p>
                                                 <p className="text-sm text-primary font-bold">{formatCurrency(payload[0].value as number)}</p>
-                                                <p className="text-xs text-muted-foreground">{payload[0].payload.itemCount} items sold</p>
+                                                <p className="text-xs text-muted-foreground">{payload[0].payload.itemCount} item terjual</p>
                                             </div>
                                         );
                                     }
@@ -154,7 +154,7 @@ export function PopularItemsBarChart({ data }: PopularItemsChartProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-lg">Top 10 Popular Items</CardTitle>
+                <CardTitle className="text-lg">10 Item Terpopuler</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="h-[350px]">
@@ -178,8 +178,8 @@ export function PopularItemsBarChart({ data }: PopularItemsChartProps) {
                                         return (
                                             <div className="rounded-lg border bg-background p-2 shadow-lg">
                                                 <p className="text-sm font-medium">{payload[0].payload.name}</p>
-                                                <p className="text-sm">Ordered {payload[0].value} times</p>
-                                                <p className="text-xs text-primary">Revenue: {formatCurrency(payload[0].payload.revenue)}</p>
+                                                <p className="text-sm">Dipesan {payload[0].value} kali</p>
+                                                <p className="text-xs text-primary">Pendapatan: {formatCurrency(payload[0].payload.revenue)}</p>
                                             </div>
                                         );
                                     }

@@ -70,7 +70,7 @@ const Items = () => {
             setCategories(categoriesRes.data || []);
         } catch (error) {
             console.error("Error fetching data:", error);
-            toast({ variant: "destructive", title: "Error loading data" });
+            toast({ variant: "destructive", title: "Gagal memuat data" });
         } finally {
             setIsLoading(false);
         }
@@ -113,7 +113,7 @@ const Items = () => {
             setPriceHistory(data || []);
         } catch (error) {
             console.error("Error fetching price history:", error);
-            toast({ variant: "destructive", title: "Error loading price history" });
+            toast({ variant: "destructive", title: "Gagal memuat riwayat harga" });
         } finally {
             setIsLoadingHistory(false);
         }
@@ -121,7 +121,7 @@ const Items = () => {
 
     const handleSave = async () => {
         if (!name.trim() || !categoryId) {
-            toast({ variant: "destructive", title: "Name and category are required" });
+            toast({ variant: "destructive", title: "Nama dan kategori wajib diisi" });
             return;
         }
 
@@ -152,35 +152,35 @@ const Items = () => {
                     }
                 }
 
-                toast({ title: "Item updated" });
+                toast({ title: "Item diperbarui" });
             } else {
                 const { error } = await supabase.from("items").insert({ name, description: description || null, category_id: categoryId, price, unit, image_url: imageUrl });
 
                 if (error) throw error;
-                toast({ title: "Item created" });
+                toast({ title: "Item dibuat" });
             }
 
             setIsDialogOpen(false);
             fetchData();
         } catch (error) {
             console.error("Error saving item:", error);
-            toast({ variant: "destructive", title: "Error saving item" });
+            toast({ variant: "destructive", title: "Gagal menyimpan item" });
         } finally {
             setIsSaving(false);
         }
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this item?")) return;
+        if (!confirm("Apakah Anda yakin ingin menghapus item ini?")) return;
 
         try {
             const { error } = await supabase.from("items").delete().eq("id", id);
             if (error) throw error;
-            toast({ title: "Item deleted" });
+            toast({ title: "Item dihapus" });
             fetchData();
         } catch (error) {
             console.error("Error deleting item:", error);
-            toast({ variant: "destructive", title: "Error deleting item" });
+            toast({ variant: "destructive", title: "Gagal menghapus item" });
         }
     };
 
@@ -188,34 +188,34 @@ const Items = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold">Items</h1>
-                    <p className="text-muted-foreground">Manage event items and pricing</p>
+                    <h1 className="text-3xl font-bold">Item</h1>
+                    <p className="text-muted-foreground">Kelola item dan harga acara</p>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button onClick={() => openDialog()} disabled={categories.length === 0}>
                             <Plus className="mr-2 h-4 w-4" />
-                            Add Item
+                            Tambah Item
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-md">
                         <DialogHeader>
-                            <DialogTitle>{editingItem ? "Edit Item" : "Add Item"}</DialogTitle>
+                            <DialogTitle>{editingItem ? "Edit Item" : "Tambah Item"}</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <Label>Image</Label>
+                                <Label>Gambar</Label>
                                 <ImageUpload value={imageUrl} onChange={setImageUrl} folder="items" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Item name" />
+                                <Label htmlFor="name">Nama</Label>
+                                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama item" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="category">Category</Label>
+                                <Label htmlFor="category">Kategori</Label>
                                 <Select value={categoryId} onValueChange={setCategoryId}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select category" />
+                                        <SelectValue placeholder="Pilih kategori" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {categories.map((cat) => (
@@ -231,21 +231,21 @@ const Items = () => {
                                 <Input id="price" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="unit">Unit</Label>
-                                <Input id="unit" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="e.g., unit, pax, set" />
+                                <Label htmlFor="unit">Satuan</Label>
+                                <Input id="unit" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="contoh: unit, pax, set" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional item description" rows={3} />
+                                <Label htmlFor="description">Deskripsi</Label>
+                                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Deskripsi item (opsional)" rows={3} />
                             </div>
                             <Button onClick={handleSave} className="w-full" disabled={isSaving}>
                                 {isSaving ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Saving...
+                                        Menyimpan...
                                     </>
                                 ) : (
-                                    "Save"
+                                    "Simpan"
                                 )}
                             </Button>
                         </div>
@@ -255,13 +255,13 @@ const Items = () => {
 
             {categories.length === 0 && !isLoading && (
                 <Card>
-                    <CardContent className="py-8 text-center text-muted-foreground">Please create at least one category before adding items.</CardContent>
+                    <CardContent className="py-8 text-center text-muted-foreground">Silakan buat minimal satu kategori sebelum menambahkan item.</CardContent>
                 </Card>
             )}
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Items</CardTitle>
+                    <CardTitle>Semua Item</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isLoading ? (
@@ -269,17 +269,17 @@ const Items = () => {
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
                     ) : items.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No items yet. Create your first item.</p>
+                        <p className="text-center py-8 text-muted-foreground">Belum ada item. Buat item pertama Anda.</p>
                     ) : (
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[60px]">Image</TableHead>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Category</TableHead>
-                                    <TableHead>Price</TableHead>
-                                    <TableHead>Unit</TableHead>
-                                    <TableHead className="w-[140px]">Actions</TableHead>
+                                    <TableHead className="w-[60px]">Gambar</TableHead>
+                                    <TableHead>Nama</TableHead>
+                                    <TableHead>Kategori</TableHead>
+                                    <TableHead>Harga</TableHead>
+                                    <TableHead>Satuan</TableHead>
+                                    <TableHead className="w-[140px]">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -300,7 +300,7 @@ const Items = () => {
                                         <TableCell>{item.unit}</TableCell>
                                         <TableCell>
                                             <div className="flex gap-1">
-                                                <Button variant="ghost" size="icon" onClick={() => viewPriceHistory(item)} title="View Price History">
+                                                <Button variant="ghost" size="icon" onClick={() => viewPriceHistory(item)} title="Lihat Riwayat Harga">
                                                     <History className="h-4 w-4" />
                                                 </Button>
                                                 <Button variant="ghost" size="icon" onClick={() => openDialog(item)}>
@@ -323,14 +323,14 @@ const Items = () => {
             <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Price History - {historyItemName}</DialogTitle>
+                        <DialogTitle>Riwayat Harga - {historyItemName}</DialogTitle>
                     </DialogHeader>
                     {isLoadingHistory ? (
                         <div className="flex justify-center py-4">
                             <Loader2 className="h-6 w-6 animate-spin text-primary" />
                         </div>
                     ) : priceHistory.length === 0 ? (
-                        <p className="text-sm text-muted-foreground text-center py-8">No price changes recorded yet.</p>
+                        <p className="text-sm text-muted-foreground text-center py-8">Belum ada perubahan harga tercatat.</p>
                     ) : (
                         <div className="space-y-3 max-h-[400px] overflow-y-auto">
                             {priceHistory.map((history) => (

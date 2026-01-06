@@ -9,8 +9,8 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
-const emailSchema = z.string().email("Please enter a valid email address");
-const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
+const emailSchema = z.string().email("Masukkan alamat email yang valid");
+const passwordSchema = z.string().min(6, "Password minimal 6 karakter");
 
 const Auth = () => {
     const navigate = useNavigate();
@@ -64,13 +64,13 @@ const Auth = () => {
         if (error) {
             toast({
                 variant: "destructive",
-                title: "Login failed",
-                description: error.message === "Invalid login credentials" ? "Invalid email or password. Please try again." : error.message,
+                title: "Login gagal",
+                description: error.message === "Invalid login credentials" ? "Email atau password salah. Silakan coba lagi." : error.message,
             });
         } else {
             toast({
-                title: "Welcome back!",
-                description: "You have successfully logged in.",
+                title: "Selamat datang kembali!",
+                description: "Anda berhasil masuk.",
             });
         }
     };
@@ -93,7 +93,7 @@ const Auth = () => {
                     <CardTitle className="text-2xl font-bold">
                         Modiv <span className="text-primary">EventCraft</span>
                     </CardTitle>
-                    <CardDescription>Admin Login</CardDescription>
+                    <CardDescription>Login Admin</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleLogin} className="space-y-4">
@@ -111,14 +111,14 @@ const Auth = () => {
                             {isLoading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Logging in...
+                                    Sedang masuk...
                                 </>
                             ) : (
-                                "Login"
+                                "Masuk"
                             )}
                         </Button>
                     </form>
-                    <p className="text-xs text-muted-foreground text-center mt-4">Admin access only. Contact system administrator for login credentials.</p>
+                    <p className="text-xs text-muted-foreground text-center mt-4">Hanya untuk akses admin. Hubungi administrator sistem untuk kredensial login.</p>
                 </CardContent>
             </Card>
         </div>

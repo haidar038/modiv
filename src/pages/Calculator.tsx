@@ -53,8 +53,8 @@ const Calculator = () => {
             <main className="container py-8">
                 {/* Page Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-foreground sm:text-4xl">Event Calculator</h1>
-                    <p className="mt-2 text-muted-foreground">{selectedTemplate ? `Starting from "${selectedTemplate.name}" template` : "Select items and quantities to build your event budget"}</p>
+                    <h1 className="text-3xl font-extrabold text-foreground sm:text-4xl">Kalkulator Acara</h1>
+                    <p className="mt-2 text-muted-foreground">{selectedTemplate ? `Dimulai dari template "${selectedTemplate.name}"` : "Pilih item dan jumlah untuk membuat anggaran acara Anda"}</p>
                 </div>
 
                 <div className="flex flex-col gap-8 lg:flex-row">
@@ -62,7 +62,7 @@ const Calculator = () => {
                     <div className="flex-1 space-y-6">
                         {categories.length === 0 ? (
                             <div className="text-center py-12">
-                                <p className="text-muted-foreground">No categories available.</p>
+                                <p className="text-muted-foreground">Tidak ada kategori tersedia.</p>
                             </div>
                         ) : (
                             categories
@@ -108,7 +108,7 @@ const Calculator = () => {
             <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
                 <SheetContent side="bottom" className="h-[80vh] rounded-t-3xl">
                     <SheetHeader className="mb-4">
-                        <SheetTitle>Your Selection</SheetTitle>
+                        <SheetTitle>Pilihan Anda</SheetTitle>
                     </SheetHeader>
                     <SummaryPanel
                         selectedItems={selectedItemsList}

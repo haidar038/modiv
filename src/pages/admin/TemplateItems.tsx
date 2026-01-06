@@ -3,11 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Trash2, Loader2, Package, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -39,6 +40,11 @@ interface TemplateItem {
     items: Item;
 }
 
+interface SelectedNewItem {
+    itemId: string;
+    quantity: number;
+}
+
 const TemplateItems = () => {
     const [templates, setTemplates] = useState<Template[]>([]);
     const [items, setItems] = useState<Item[]>([]);
@@ -49,10 +55,16 @@ const TemplateItems = () => {
     const [isLoadingItems, setIsLoadingItems] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-    const [newItemId, setNewItemId] = useState("");
-    const [newQuantity, setNewQuantity] = useState(1);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const { toast } = useToast();
+
+    // Bulk selection state
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+    // Multi-item add state
+    const [newItems, setNewItems] = useState<SelectedNewItem[]>([]);
+    const [defaultQuantity, setDefaultQuantity] = useState(1);
 
     // Fetch templates and items on mount
     useEffect(() => {
@@ -72,19 +84,19 @@ const TemplateItems = () => {
                 setItems(itemsRes.data || []);
                 setCategories(categoriesRes.data || []);
 
-                // Auto-select first template
                 if (templatesRes.data && templatesRes.data.length > 0) {
                     setSelectedTemplateId(templatesRes.data[0].id);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                toast({ variant: "destructive", title: "Error loading data" });
+                toast({ variant: "destructive", title: "Gagal memuat data" });
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Fetch template items when selected template changes
@@ -96,6 +108,7 @@ const TemplateItems = () => {
 
         const fetchTemplateItems = async () => {
             setIsLoadingItems(true);
+            setSelectedIds(new Set()); // Clear selection on template change
             try {
                 const { data, error } = await supabase.from("template_items").select("*, items(id, name, price, unit, category_id)").eq("template_id", selectedTemplateId).order("created_at");
 
@@ -103,13 +116,14 @@ const TemplateItems = () => {
                 setTemplateItems(data || []);
             } catch (error) {
                 console.error("Error fetching template items:", error);
-                toast({ variant: "destructive", title: "Error loading template items" });
+                toast({ variant: "destructive", title: "Gagal memuat item template" });
             } finally {
                 setIsLoadingItems(false);
             }
         };
 
         fetchTemplateItems();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedTemplateId]);
 
     const getAvailableItems = () => {
@@ -122,32 +136,87 @@ const TemplateItems = () => {
         return category?.name || "Unknown";
     };
 
-    const handleAddItem = async () => {
-        if (!newItemId || !selectedTemplateId) return;
+    // Bulk selection handlers
+    const handleSelectAll = () => {
+        if (selectedIds.size === templateItems.length) {
+            setSelectedIds(new Set());
+        } else {
+            setSelectedIds(new Set(templateItems.map((ti) => ti.id)));
+        }
+    };
+
+    const handleSelectItem = (id: string) => {
+        const newSet = new Set(selectedIds);
+        if (newSet.has(id)) {
+            newSet.delete(id);
+        } else {
+            newSet.add(id);
+        }
+        setSelectedIds(newSet);
+    };
+
+    // Toggle item in new items list
+    const toggleNewItem = (itemId: string) => {
+        setNewItems((prev) => {
+            const exists = prev.find((i) => i.itemId === itemId);
+            if (exists) {
+                return prev.filter((i) => i.itemId !== itemId);
+            } else {
+                return [...prev, { itemId, quantity: defaultQuantity }];
+            }
+        });
+    };
+
+    const updateNewItemQuantity = (itemId: string, quantity: number) => {
+        setNewItems((prev) => prev.map((i) => (i.itemId === itemId ? { ...i, quantity: Math.max(1, quantity) } : i)));
+    };
+
+    const handleAddMultipleItems = async () => {
+        if (newItems.length === 0 || !selectedTemplateId) return;
 
         setIsSaving(true);
         try {
-            const { error } = await supabase.from("template_items").insert({
+            const insertData = newItems.map((item) => ({
                 template_id: selectedTemplateId,
-                item_id: newItemId,
-                quantity: newQuantity,
-            });
+                item_id: item.itemId,
+                quantity: item.quantity,
+            }));
 
+            const { error } = await supabase.from("template_items").insert(insertData);
             if (error) throw error;
 
-            toast({ title: "Item added to template" });
+            toast({ title: `${newItems.length} item ditambahkan ke template` });
             setIsDialogOpen(false);
-            setNewItemId("");
-            setNewQuantity(1);
+            setNewItems([]);
 
             // Refresh template items
             const { data } = await supabase.from("template_items").select("*, items(id, name, price, unit, category_id)").eq("template_id", selectedTemplateId).order("created_at");
             setTemplateItems(data || []);
         } catch (error) {
-            console.error("Error adding item:", error);
-            toast({ variant: "destructive", title: "Error adding item" });
+            console.error("Error adding items:", error);
+            toast({ variant: "destructive", title: "Gagal menambahkan item" });
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (selectedIds.size === 0) return;
+        if (!confirm(`Hapus ${selectedIds.size} item terpilih dari template?`)) return;
+
+        setIsDeleting(true);
+        try {
+            const { error } = await supabase.from("template_items").delete().in("id", Array.from(selectedIds));
+            if (error) throw error;
+
+            toast({ title: `${selectedIds.size} item dihapus` });
+            setTemplateItems((prev) => prev.filter((ti) => !selectedIds.has(ti.id)));
+            setSelectedIds(new Set());
+        } catch (error) {
+            console.error("Error deleting items:", error);
+            toast({ variant: "destructive", title: "Gagal menghapus item" });
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -156,29 +225,29 @@ const TemplateItems = () => {
 
         try {
             const { error } = await supabase.from("template_items").update({ quantity }).eq("id", templateItemId);
-
             if (error) throw error;
 
             setTemplateItems((prev) => prev.map((ti) => (ti.id === templateItemId ? { ...ti, quantity } : ti)));
         } catch (error) {
             console.error("Error updating quantity:", error);
-            toast({ variant: "destructive", title: "Error updating quantity" });
+            toast({ variant: "destructive", title: "Gagal memperbarui jumlah" });
         }
     };
 
     const handleRemoveItem = async (templateItemId: string) => {
-        if (!confirm("Remove this item from the template?")) return;
+        if (!confirm("Hapus item ini dari template?")) return;
 
         try {
             const { error } = await supabase.from("template_items").delete().eq("id", templateItemId);
-
             if (error) throw error;
 
-            toast({ title: "Item removed from template" });
+            toast({ title: "Item dihapus dari template" });
             setTemplateItems((prev) => prev.filter((ti) => ti.id !== templateItemId));
+            selectedIds.delete(templateItemId);
+            setSelectedIds(new Set(selectedIds));
         } catch (error) {
             console.error("Error removing item:", error);
-            toast({ variant: "destructive", title: "Error removing item" });
+            toast({ variant: "destructive", title: "Gagal menghapus item" });
         }
     };
 
@@ -188,6 +257,14 @@ const TemplateItems = () => {
 
     const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
     const availableItems = getAvailableItems();
+
+    // Group available items by category for better UX
+    const groupedAvailableItems = categories
+        .map((cat) => ({
+            category: cat,
+            items: availableItems.filter((item) => item.category_id === cat.id),
+        }))
+        .filter((group) => group.items.length > 0);
 
     if (isLoading) {
         return (
@@ -201,8 +278,8 @@ const TemplateItems = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold">Template Items</h1>
-                    <p className="text-muted-foreground">Manage items for each event template</p>
+                    <h1 className="text-3xl font-bold">Item Template</h1>
+                    <p className="text-muted-foreground">Kelola item untuk setiap template acara</p>
                 </div>
             </div>
 
@@ -210,7 +287,7 @@ const TemplateItems = () => {
                 <Card>
                     <CardContent className="py-12 text-center">
                         <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                        <p className="text-muted-foreground">No templates found. Create templates first.</p>
+                        <p className="text-muted-foreground">Template tidak ditemukan. Buat template terlebih dahulu.</p>
                     </CardContent>
                 </Card>
             ) : (
@@ -238,59 +315,90 @@ const TemplateItems = () => {
                     <Card className="lg:col-span-3">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
-                                <CardTitle>{selectedTemplate?.name || "Select Template"}</CardTitle>
+                                <CardTitle>{selectedTemplate?.name || "Pilih Template"}</CardTitle>
                                 {selectedTemplate && (
                                     <p className="text-sm text-muted-foreground mt-1">
-                                        {templateItems.length} items • Total: {formatCurrency(calculateTemplateTotal())}
+                                        {templateItems.length} item • Total: {formatCurrency(calculateTemplateTotal())}
                                     </p>
                                 )}
                             </div>
                             <div className="flex gap-2">
+                                {selectedIds.size > 0 && (
+                                    <Button variant="destructive" size="sm" onClick={handleBulkDelete} disabled={isDeleting}>
+                                        {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                                        Delete ({selectedIds.size})
+                                    </Button>
+                                )}
                                 <Button variant="outline" size="sm" onClick={() => setIsPreviewOpen(true)} disabled={templateItems.length === 0}>
                                     <Eye className="mr-2 h-4 w-4" />
-                                    Preview
+                                    Pratinjau
                                 </Button>
-                                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                <Dialog
+                                    open={isDialogOpen}
+                                    onOpenChange={(open) => {
+                                        setIsDialogOpen(open);
+                                        if (!open) setNewItems([]);
+                                    }}
+                                >
                                     <DialogTrigger asChild>
                                         <Button size="sm" disabled={availableItems.length === 0}>
                                             <Plus className="mr-2 h-4 w-4" />
-                                            Add Item
+                                            Tambah Item
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent>
+                                    <DialogContent className="max-w-lg">
                                         <DialogHeader>
-                                            <DialogTitle>Add Item to Template</DialogTitle>
+                                            <DialogTitle>Tambah Item ke Template</DialogTitle>
                                         </DialogHeader>
                                         <div className="space-y-4">
-                                            <div className="space-y-2">
-                                                <Label>Select Item</Label>
-                                                <Select value={newItemId} onValueChange={setNewItemId}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Choose an item" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {availableItems.map((item) => (
-                                                            <SelectItem key={item.id} value={item.id}>
-                                                                {item.name} - {formatCurrency(item.price)}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                            <div className="flex items-center gap-2">
+                                                <Label>Jumlah Default:</Label>
+                                                <Input type="number" min={1} value={defaultQuantity} onChange={(e) => setDefaultQuantity(Math.max(1, Number(e.target.value)))} className="w-20" />
                                             </div>
-                                            <div className="space-y-2">
-                                                <Label>Default Quantity</Label>
-                                                <Input type="number" min={1} value={newQuantity} onChange={(e) => setNewQuantity(Number(e.target.value))} />
+                                            <ScrollArea className="h-[300px] border rounded-lg p-2">
+                                                {groupedAvailableItems.map((group) => (
+                                                    <div key={group.category.id} className="mb-4">
+                                                        <div className="text-sm font-semibold text-muted-foreground mb-2">{group.category.name}</div>
+                                                        {group.items.map((item) => {
+                                                            const selected = newItems.find((i) => i.itemId === item.id);
+                                                            return (
+                                                                <div key={item.id} className="flex items-center gap-3 py-2 px-2 hover:bg-secondary rounded-md">
+                                                                    <Checkbox checked={!!selected} onCheckedChange={() => toggleNewItem(item.id)} />
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium text-sm truncate">{item.name}</div>
+                                                                        <div className="text-xs text-muted-foreground">
+                                                                            {formatCurrency(item.price)} / {item.unit}
+                                                                        </div>
+                                                                    </div>
+                                                                    {selected && (
+                                                                        <Input
+                                                                            type="number"
+                                                                            min={1}
+                                                                            value={selected.quantity}
+                                                                            onChange={(e) => updateNewItemQuantity(item.id, Number(e.target.value))}
+                                                                            className="w-16 h-8"
+                                                                            onClick={(e) => e.stopPropagation()}
+                                                                        />
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ))}
+                                            </ScrollArea>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm text-muted-foreground">{newItems.length} item dipilih</span>
+                                                <Button onClick={handleAddMultipleItems} disabled={isSaving || newItems.length === 0}>
+                                                    {isSaving ? (
+                                                        <>
+                                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                            Menambahkan...
+                                                        </>
+                                                    ) : (
+                                                        `Tambah ${newItems.length} Item`
+                                                    )}
+                                                </Button>
                                             </div>
-                                            <Button onClick={handleAddItem} className="w-full" disabled={isSaving || !newItemId}>
-                                                {isSaving ? (
-                                                    <>
-                                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                        Adding...
-                                                    </>
-                                                ) : (
-                                                    "Add to Template"
-                                                )}
-                                            </Button>
                                         </div>
                                     </DialogContent>
                                 </Dialog>
@@ -304,24 +412,30 @@ const TemplateItems = () => {
                             ) : templateItems.length === 0 ? (
                                 <div className="text-center py-12">
                                     <Package className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
-                                    <p className="text-muted-foreground">No items in this template yet.</p>
-                                    <p className="text-sm text-muted-foreground">Add items to create a preset for this template.</p>
+                                    <p className="text-muted-foreground">Belum ada item dalam template ini.</p>
+                                    <p className="text-sm text-muted-foreground">Tambahkan item untuk membuat preset template ini.</p>
                                 </div>
                             ) : (
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
+                                            <TableHead className="w-[40px]">
+                                                <Checkbox checked={selectedIds.size === templateItems.length && templateItems.length > 0} onCheckedChange={handleSelectAll} />
+                                            </TableHead>
                                             <TableHead>Item</TableHead>
-                                            <TableHead>Category</TableHead>
-                                            <TableHead>Price</TableHead>
-                                            <TableHead className="w-[100px]">Qty</TableHead>
+                                            <TableHead>Kategori</TableHead>
+                                            <TableHead>Harga</TableHead>
+                                            <TableHead className="w-[100px]">Jml</TableHead>
                                             <TableHead className="text-right">Subtotal</TableHead>
                                             <TableHead className="w-[60px]"></TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {templateItems.map((ti) => (
-                                            <TableRow key={ti.id}>
+                                            <TableRow key={ti.id} className={selectedIds.has(ti.id) ? "bg-secondary/50" : ""}>
+                                                <TableCell>
+                                                    <Checkbox checked={selectedIds.has(ti.id)} onCheckedChange={() => handleSelectItem(ti.id)} />
+                                                </TableCell>
                                                 <TableCell className="font-medium">{ti.items.name}</TableCell>
                                                 <TableCell>
                                                     <Badge variant="outline">{getCategoryName(ti.items.category_id)}</Badge>
@@ -350,7 +464,7 @@ const TemplateItems = () => {
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
                 <DialogContent className="max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>Template Preview: {selectedTemplate?.name}</DialogTitle>
+                        <DialogTitle>Pratinjau Template: {selectedTemplate?.name}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground">{selectedTemplate?.description}</p>
@@ -364,7 +478,7 @@ const TemplateItems = () => {
                                 </div>
                             ))}
                             <div className="border-t pt-2 flex justify-between font-semibold">
-                                <span>Template Total</span>
+                                <span>Total Template</span>
                                 <span className="text-primary">{formatCurrency(calculateTemplateTotal())}</span>
                             </div>
                         </div>

@@ -158,28 +158,28 @@ const Dashboard = () => {
 
     const statCards = [
         {
-            title: "Categories",
+            title: "Kategori",
             value: stats.categoriesCount,
             icon: FolderOpen,
             color: "text-blue-500",
             bgColor: "bg-blue-500/10",
         },
         {
-            title: "Items",
+            title: "Item",
             value: stats.itemsCount,
             icon: Package,
             color: "text-green-500",
             bgColor: "bg-green-500/10",
         },
         {
-            title: "Templates",
+            title: "Template",
             value: stats.templatesCount,
             icon: FileText,
             color: "text-purple-500",
             bgColor: "bg-purple-500/10",
         },
         {
-            title: "Total Inquiries",
+            title: "Total Permintaan",
             value: stats.inquiriesCount,
             icon: ClipboardList,
             color: "text-orange-500",
@@ -198,8 +198,8 @@ const Dashboard = () => {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold">Dashboard</h1>
-                <p className="text-muted-foreground">Analytics and overview of your event platform.</p>
+                <h1 className="text-3xl font-bold">Dasbor</h1>
+                <p className="text-muted-foreground">Analitik dan ringkasan platform acara Anda.</p>
             </div>
 
             {/* Stat Cards */}
@@ -228,12 +228,12 @@ const Dashboard = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <ClipboardList className="h-5 w-5 text-primary" />
-                            Pending Inquiries
+                            Permintaan Tertunda
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold text-primary">{stats.pendingInquiries}</div>
-                        <p className="text-sm text-muted-foreground">Inquiries awaiting response</p>
+                        <p className="text-sm text-muted-foreground">Permintaan menunggu respon</p>
                     </CardContent>
                 </Card>
 
@@ -241,12 +241,12 @@ const Dashboard = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <TrendingUp className="h-5 w-5 text-green-500" />
-                            Total Revenue
+                            Total Pendapatan
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold text-green-500">{formatCurrency(stats.totalRevenue)}</div>
-                        <p className="text-sm text-muted-foreground">From completed inquiries</p>
+                        <p className="text-sm text-muted-foreground">Dari permintaan yang selesai</p>
                     </CardContent>
                 </Card>
             </div>

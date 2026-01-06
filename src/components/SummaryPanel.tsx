@@ -14,18 +14,18 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({ selectedItems, total, onReq
     return (
         <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
             <div className="mb-6 flex items-center justify-between">
-                <h3 className="text-lg font-bold text-foreground">Your Selection</h3>
+                <h3 className="text-lg font-bold text-foreground">Pilihan Anda</h3>
                 {selectedItems.length > 0 && (
                     <button onClick={onReset} className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-destructive">
                         <Trash2 className="h-3 w-3" />
-                        Clear
+                        Hapus
                     </button>
                 )}
             </div>
 
             {selectedItems.length === 0 ? (
                 <div className="py-8 text-center">
-                    <p className="text-sm text-muted-foreground">Select items from the inventory to see your budget breakdown</p>
+                    <p className="text-sm text-muted-foreground">Pilih item dari inventaris untuk melihat rincian anggaran Anda</p>
                 </div>
             ) : (
                 <div className="space-y-3 mb-6 max-h-[300px] overflow-y-auto pr-2">
@@ -45,13 +45,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({ selectedItems, total, onReq
 
             <div className="border-t border-border pt-4">
                 <div className="mb-4 flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">Estimated Total</span>
+                    <span className="text-sm font-medium text-muted-foreground">Estimasi Total</span>
                     <span className="text-2xl font-extrabold text-primary">{formatCurrency(total)}</span>
                 </div>
 
                 <Button className="w-full shadow-button" size="lg" onClick={onRequestQuote} disabled={selectedItems.length === 0}>
                     <FileText className="mr-2 h-4 w-4" />
-                    Review & Request Quote
+                    Tinjau & Minta Penawaran
                 </Button>
             </div>
         </div>

@@ -25,67 +25,65 @@ interface InquiryData {
 export const generateQuotationPdf = (inquiry: InquiryData) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
     // Header
     doc.setFontSize(24);
     doc.setTextColor(234, 88, 51); // Primary color #EA5833
     doc.text("Modiv EventCraft", pageWidth / 2, 25, { align: "center" });
 
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text("Event Services Quotation", pageWidth / 2, 33, { align: "center" });
+    doc.setFontSize(18); // Changed from 12
+    doc.setTextColor(30, 30, 30); // Changed from 100
+    doc.text("Penawaran Jasa Acara", pageWidth / 2, 33, { align: "center" }); // Translated and adjusted y-coordinate
 
     // Quotation Info Box
     doc.setFontSize(10);
     doc.setTextColor(60);
-    doc.text(`Quotation ID: ${inquiry.id.slice(0, 8).toUpperCase()}`, 14, 50);
-    doc.text(`Generated: ${format(new Date(), "dd MMM yyyy, HH:mm")}`, 14, 56);
+    doc.text(`ID Penawaran: ${inquiry.id.slice(0, 8).toUpperCase()}`, 14, 50); // Translated
+    doc.text(`Dibuat: ${format(new Date(inquiry.created_at), "dd MMM yyyy, HH:mm")}`, 14, 56); // Translated and used inquiry.created_at
 
     // Customer Details Section
     doc.setFontSize(12);
-    doc.setTextColor(0);
-    doc.text("Customer Information", 14, 70);
+    doc.setTextColor(0, 0, 0); // Changed from 0
+    doc.text("Informasi Pelanggan", 14, 70); // Translated
 
-    doc.setFontSize(10);
-    doc.setTextColor(60);
-    let yPos = 78;
+    const customerInfo = [
+        ["Nama", inquiry.customer_name],
+        ["Email", inquiry.email || "-"],
+        ["Telepon", inquiry.phone || "-"],
+        ["Tanggal Acara", inquiry.event_date ? format(new Date(inquiry.event_date), "dd MMM yyyy") : "-"],
+        ["Jenis Acara", inquiry.event_type || "-"],
+    ];
 
-    doc.text(`Name: ${inquiry.customer_name}`, 14, yPos);
-    yPos += 6;
+    autoTable(doc, {
+        startY: 78,
+        body: customerInfo,
+        theme: "plain",
+        styles: {
+            fontSize: 10,
+            cellPadding: 1,
+            textColor: [60, 60, 60],
+        },
+        columnStyles: {
+            0: { fontStyle: "bold", cellWidth: 30 },
+            1: { cellWidth: 100 },
+        },
+        margin: { left: 14 },
+    });
 
-    if (inquiry.email) {
-        doc.text(`Email: ${inquiry.email}`, 14, yPos);
-        yPos += 6;
-    }
-
-    if (inquiry.phone) {
-        doc.text(`Phone: ${inquiry.phone}`, 14, yPos);
-        yPos += 6;
-    }
-
-    if (inquiry.event_date) {
-        doc.text(`Event Date: ${format(new Date(inquiry.event_date), "dd MMM yyyy")}`, 14, yPos);
-        yPos += 6;
-    }
-
-    if (inquiry.event_type) {
-        doc.text(`Event Type: ${inquiry.event_type}`, 14, yPos);
-        yPos += 6;
-    }
-
-    yPos += 8;
+    const customerTableEndY = (doc as jsPDF & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY;
 
     // Items Table
     doc.setFontSize(12);
     doc.setTextColor(0);
-    doc.text("Quotation Items", 14, yPos);
-    yPos += 8;
+    doc.text("Item Penawaran", 14, customerTableEndY + 10); // Translated and adjusted y-coordinate
+    const itemsTableStartY = customerTableEndY + 18;
 
     const tableData = inquiry.items.map((item, index) => [index + 1, item.item_name, item.quantity, formatCurrency(item.price_at_time), formatCurrency(item.price_at_time * item.quantity)]);
 
     autoTable(doc, {
-        startY: yPos,
-        head: [["#", "Item", "Qty", "Unit Price", "Subtotal"]],
+        startY: itemsTableStartY,
+        head: [["#", "Item", "Jml", "Harga Satuan", "Subtotal"]], // Translated
         body: tableData,
         theme: "striped",
         headStyles: {
@@ -107,35 +105,37 @@ export const generateQuotationPdf = (inquiry: InquiryData) => {
     });
 
     // Grand Total
-    const finalY = (doc as jsPDF & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+    const totalTableEndY = (doc as jsPDF & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY;
 
     doc.setFillColor(245, 245, 245);
-    doc.rect(pageWidth - 80, finalY, 66, 12, "F");
+    doc.rect(pageWidth - 80, totalTableEndY + 5, 66, 12, "F"); // Adjusted y-coordinate
 
     doc.setFontSize(11);
     doc.setTextColor(0);
-    doc.text("Grand Total:", pageWidth - 78, finalY + 8);
+    doc.text("Grand Total:", pageWidth - 78, totalTableEndY + 13); // Translated and adjusted y-coordinate
 
     doc.setFontSize(12);
     doc.setTextColor(234, 88, 51);
-    doc.text(formatCurrency(inquiry.total), pageWidth - 14, finalY + 8, { align: "right" });
+    doc.text(formatCurrency(inquiry.total), pageWidth - 14, totalTableEndY + 13, { align: "right" }); // Adjusted y-coordinate
 
     // Notes Section
     if (inquiry.notes) {
-        const notesY = finalY + 25;
+        const notesY = totalTableEndY + 25; // Adjusted y-coordinate
         doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text("Notes:", 14, notesY);
+        doc.setTextColor(100, 100, 100); // Changed from 100
+        doc.text("Catatan:", 14, notesY); // Translated
         doc.setFontSize(9);
-        doc.text(inquiry.notes, 14, notesY + 6, { maxWidth: pageWidth - 28 });
+        const splitNotes = doc.splitTextToSize(inquiry.notes, pageWidth - 28); // Used pageWidth for maxWidth
+        doc.text(splitNotes, 14, notesY + 6); // Adjusted y-coordinate
     }
 
     // Footer
-    const footerY = doc.internal.pageSize.getHeight() - 15;
+    const footerY = pageHeight - 15; // Used pageHeight
     doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text("This is a quotation estimate. Final prices may vary based on actual event requirements.", pageWidth / 2, footerY, { align: "center" });
-    doc.text("© Modiv EventCraft - Event Services Marketplace", pageWidth / 2, footerY + 5, { align: "center" });
+    doc.setTextColor(100, 100, 100); // Changed from 150
+    const disclaimer = "Ini adalah estimasi penawaran. Harga akhir dapat berubah berdasarkan kebutuhan acara yang sebenarnya."; // Translated
+    doc.text(disclaimer, pageWidth / 2, footerY, { align: "center" }); // Used pageWidth
+    doc.text("© Modiv EventCraft - Layanan Produksi Acara", pageWidth / 2, footerY + 5, { align: "center" }); // Translated and used pageWidth
 
     // Download the PDF
     const fileName = `quotation-${inquiry.id.slice(0, 8)}-${format(new Date(), "yyyyMMdd")}.pdf`;

@@ -70,7 +70,7 @@ const Inquiries = () => {
             setInquiries(data || []);
         } catch (error) {
             console.error("Error fetching inquiries:", error);
-            toast({ variant: "destructive", title: "Error loading inquiries" });
+            toast({ variant: "destructive", title: "Gagal memuat permintaan" });
         } finally {
             setIsLoading(false);
         }
@@ -128,7 +128,7 @@ const Inquiries = () => {
                 // Don't throw - status was still updated
             }
 
-            toast({ title: "Status updated" });
+            toast({ title: "Status diperbarui" });
             fetchInquiries();
 
             // Refresh status history if viewing this inquiry
@@ -138,7 +138,7 @@ const Inquiries = () => {
             }
         } catch (error) {
             console.error("Error updating status:", error);
-            toast({ variant: "destructive", title: "Error updating status" });
+            toast({ variant: "destructive", title: "Gagal memperbarui status" });
         }
     };
 
@@ -159,10 +159,10 @@ const Inquiries = () => {
                 created_at: selectedInquiry.created_at,
                 items: inquiryItems,
             });
-            toast({ title: "PDF downloaded successfully" });
+            toast({ title: "PDF berhasil diunduh" });
         } catch (error) {
             console.error("Error generating PDF:", error);
-            toast({ variant: "destructive", title: "Error generating PDF" });
+            toast({ variant: "destructive", title: "Gagal membuat PDF" });
         } finally {
             setIsDownloading(false);
         }
@@ -170,29 +170,29 @@ const Inquiries = () => {
 
     const handleExportCSV = () => {
         if (inquiries.length === 0) {
-            toast({ variant: "destructive", title: "No data to export" });
+            toast({ variant: "destructive", title: "Tidak ada data untuk diekspor" });
             return;
         }
         exportInquiriesToCSV(inquiries);
-        toast({ title: "CSV exported successfully" });
+        toast({ title: "CSV berhasil diekspor" });
     };
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold">Inquiries</h1>
-                    <p className="text-muted-foreground">View and manage customer inquiries</p>
+                    <h1 className="text-3xl font-bold">Permintaan</h1>
+                    <p className="text-muted-foreground">Lihat dan kelola permintaan pelanggan</p>
                 </div>
                 <Button variant="outline" onClick={handleExportCSV} disabled={inquiries.length === 0}>
                     <FileDown className="mr-2 h-4 w-4" />
-                    Export CSV
+                    Ekspor CSV
                 </Button>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Inquiries ({inquiries.length})</CardTitle>
+                    <CardTitle>Semua Permintaan ({inquiries.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isLoading ? (
@@ -200,17 +200,17 @@ const Inquiries = () => {
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
                     ) : inquiries.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No inquiries yet.</p>
+                        <p className="text-center py-8 text-muted-foreground">Belum ada permintaan.</p>
                     ) : (
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Customer</TableHead>
-                                    <TableHead>Event Date</TableHead>
+                                    <TableHead>Pelanggan</TableHead>
+                                    <TableHead>Tanggal Acara</TableHead>
                                     <TableHead>Total</TableHead>
                                     <TableHead>Status</TableHead>
-                                    <TableHead>Created</TableHead>
-                                    <TableHead className="w-[100px]">Actions</TableHead>
+                                    <TableHead>Dibuat</TableHead>
+                                    <TableHead className="w-[100px]">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -232,10 +232,10 @@ const Inquiries = () => {
                                                     </Badge>
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="pending">Pending</SelectItem>
-                                                    <SelectItem value="contacted">Contacted</SelectItem>
-                                                    <SelectItem value="completed">Completed</SelectItem>
-                                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                                    <SelectItem value="pending">Tertunda</SelectItem>
+                                                    <SelectItem value="contacted">Dihubungi</SelectItem>
+                                                    <SelectItem value="completed">Selesai</SelectItem>
+                                                    <SelectItem value="cancelled">Dibatalkan</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </TableCell>
@@ -257,27 +257,27 @@ const Inquiries = () => {
                 <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="flex items-center justify-between">
-                            <span>Inquiry Details</span>
+                            <span>Detail Permintaan</span>
                             <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={isDownloading || isLoadingDetails}>
                                 {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                                Download PDF
+                                Unduh PDF
                             </Button>
                         </DialogTitle>
                     </DialogHeader>
                     {selectedInquiry && (
                         <Tabs defaultValue="details" className="w-full">
                             <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="details">Details</TabsTrigger>
+                                <TabsTrigger value="details">Detail</TabsTrigger>
                                 <TabsTrigger value="history" className="flex items-center gap-1">
                                     <History className="h-3 w-3" />
-                                    Status History
+                                    Riwayat Status
                                 </TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="details" className="space-y-6 mt-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <div className="text-sm text-muted-foreground">Customer</div>
+                                        <div className="text-sm text-muted-foreground">Pelanggan</div>
                                         <div className="font-medium">{selectedInquiry.customer_name}</div>
                                     </div>
                                     <div>
@@ -285,15 +285,15 @@ const Inquiries = () => {
                                         <div className="font-medium">{selectedInquiry.email || "-"}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-muted-foreground">Phone</div>
+                                        <div className="text-sm text-muted-foreground">Telepon</div>
                                         <div className="font-medium">{selectedInquiry.phone || "-"}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-muted-foreground">Event Date</div>
+                                        <div className="text-sm text-muted-foreground">Tanggal Acara</div>
                                         <div className="font-medium">{selectedInquiry.event_date ? format(new Date(selectedInquiry.event_date), "MMM d, yyyy") : "-"}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-muted-foreground">Event Type</div>
+                                        <div className="text-sm text-muted-foreground">Jenis Acara</div>
                                         <div className="font-medium">{selectedInquiry.event_type || "-"}</div>
                                     </div>
                                     <div>
@@ -304,7 +304,7 @@ const Inquiries = () => {
 
                                 {selectedInquiry.notes && (
                                     <div>
-                                        <div className="text-sm text-muted-foreground mb-1">Notes</div>
+                                        <div className="text-sm text-muted-foreground mb-1">Catatan</div>
                                         <div className="text-sm bg-secondary/50 rounded-lg p-3">{selectedInquiry.notes}</div>
                                     </div>
                                 )}
@@ -316,14 +316,14 @@ const Inquiries = () => {
                                             <Loader2 className="h-6 w-6 animate-spin text-primary" />
                                         </div>
                                     ) : inquiryItems.length === 0 ? (
-                                        <p className="text-sm text-muted-foreground">No items recorded.</p>
+                                        <p className="text-sm text-muted-foreground">Tidak ada item tercatat.</p>
                                     ) : (
                                         <Table>
                                             <TableHeader>
                                                 <TableRow>
                                                     <TableHead>Item</TableHead>
-                                                    <TableHead className="text-right">Qty</TableHead>
-                                                    <TableHead className="text-right">Price</TableHead>
+                                                    <TableHead className="text-right">Jml</TableHead>
+                                                    <TableHead className="text-right">Harga</TableHead>
                                                     <TableHead className="text-right">Subtotal</TableHead>
                                                 </TableRow>
                                             </TableHeader>
@@ -348,7 +348,7 @@ const Inquiries = () => {
                                         <Loader2 className="h-6 w-6 animate-spin text-primary" />
                                     </div>
                                 ) : statusHistory.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground text-center py-8">No status changes recorded yet.</p>
+                                    <p className="text-sm text-muted-foreground text-center py-8">Belum ada perubahan status tercatat.</p>
                                 ) : (
                                     <div className="space-y-3">
                                         {statusHistory.map((history) => (

@@ -100,8 +100,8 @@ const Success = () => {
                         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
                             <CheckCircle className="h-10 w-10 text-green-600" />
                         </div>
-                        <h1 className="mb-2 text-3xl font-extrabold text-foreground">Thank You!</h1>
-                        <p className="text-muted-foreground">Your inquiry has been submitted successfully. Our team will contact you within 24 hours.</p>
+                        <h1 className="mb-2 text-3xl font-extrabold text-foreground">Penawaran Harga Anda Siap!</h1>
+                        <p className="text-muted-foreground">Unduh atau cetak penawaran Anda di bawah. Hubungi kami via WhatsApp untuk respon lebih cepat.</p>
                     </div>
 
                     {/* Inquiry Details Card */}
@@ -109,23 +109,23 @@ const Success = () => {
                         <CardContent className="p-6">
                             <div className="mb-4 flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Inquiry ID</p>
+                                    <p className="text-sm text-muted-foreground">ID Penawaran</p>
                                     <p className="font-mono text-lg font-bold text-primary">{inquiry.id.slice(0, 8).toUpperCase()}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-sm text-muted-foreground">Submitted</p>
+                                    <p className="text-sm text-muted-foreground">Dibuat pada</p>
                                     <p className="font-medium">{format(new Date(inquiry.createdAt), "dd MMM yyyy, HH:mm")}</p>
                                 </div>
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2 border-t border-border pt-4">
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Name</p>
+                                    <p className="text-sm text-muted-foreground">Nama</p>
                                     <p className="font-medium">{inquiry.customerName}</p>
                                 </div>
                                 {inquiry.phone && (
                                     <div>
-                                        <p className="text-sm text-muted-foreground">Phone</p>
+                                        <p className="text-sm text-muted-foreground">Telepon</p>
                                         <p className="font-medium">{inquiry.phone}</p>
                                     </div>
                                 )}
@@ -137,7 +137,7 @@ const Success = () => {
                                 )}
                                 {inquiry.eventDate && (
                                     <div>
-                                        <p className="text-sm text-muted-foreground">Event Date</p>
+                                        <p className="text-sm text-muted-foreground">Tanggal Acara</p>
                                         <p className="font-medium">{format(new Date(inquiry.eventDate), "dd MMM yyyy")}</p>
                                     </div>
                                 )}
@@ -148,13 +148,13 @@ const Success = () => {
                     {/* Items Table */}
                     <Card className="mb-6">
                         <CardContent className="p-6">
-                            <h3 className="mb-4 font-semibold">Selected Items</h3>
+                            <h3 className="mb-4 font-semibold">Item yang Dipilih</h3>
                             <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Item</TableHead>
-                                        <TableHead className="text-right">Qty</TableHead>
-                                        <TableHead className="text-right">Price</TableHead>
+                                        <TableHead className="text-right">Jml</TableHead>
+                                        <TableHead className="text-right">Harga</TableHead>
                                         <TableHead className="text-right">Subtotal</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -171,7 +171,7 @@ const Success = () => {
                             </Table>
 
                             <div className="mt-4 flex justify-between border-t border-border pt-4">
-                                <span className="text-lg font-semibold">Grand Total</span>
+                                <span className="text-lg font-semibold">Total Keseluruhan</span>
                                 <span className="text-lg font-bold text-primary">{formatCurrency(inquiry.total)}</span>
                             </div>
                         </CardContent>
@@ -181,21 +181,21 @@ const Success = () => {
                     <div className="flex flex-col gap-3 sm:flex-row">
                         <Button onClick={handleDownloadPdf} variant="outline" className="flex-1" disabled={isDownloading}>
                             {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                            Download PDF Quotation
+                            Unduh PDF Penawaran
                         </Button>
                         <Button onClick={handleBackToHome} className="flex-1">
                             <Home className="mr-2 h-4 w-4" />
-                            Back to Home
+                            Kembali ke Beranda
                         </Button>
                     </div>
 
                     {/* WhatsApp CTA */}
                     <div className="mt-8 rounded-xl bg-muted/50 p-6 text-center">
-                        <p className="mb-2 font-medium">Need immediate assistance?</p>
-                        <p className="mb-4 text-sm text-muted-foreground">Contact us via WhatsApp for faster response</p>
+                        <p className="mb-2 font-medium">Butuh bantuan segera?</p>
+                        <p className="mb-4 text-sm text-muted-foreground">Hubungi kami via WhatsApp untuk respon lebih cepat</p>
                         <Button asChild variant="outline" className="gap-2">
-                            <a href={`https://wa.me/6281234567890?text=Hi, I just submitted an inquiry (ID: ${inquiry.id.slice(0, 8).toUpperCase()}) and would like to discuss further.`} target="_blank" rel="noopener noreferrer">
-                                Chat on WhatsApp
+                            <a href={`https://wa.me/6281234567890?text=Halo, saya tertarik dengan penawaran (ID: ${inquiry.id.slice(0, 8).toUpperCase()}). Bisakah kita diskusikan detailnya?`} target="_blank" rel="noopener noreferrer">
+                                Chat via WhatsApp
                                 <ArrowRight className="h-4 w-4" />
                             </a>
                         </Button>

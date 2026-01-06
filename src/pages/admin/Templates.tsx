@@ -38,7 +38,7 @@ const Templates = () => {
             setTemplates(data || []);
         } catch (error) {
             console.error("Error fetching templates:", error);
-            toast({ variant: "destructive", title: "Error loading templates" });
+            toast({ variant: "destructive", title: "Gagal memuat template" });
         } finally {
             setIsLoading(false);
         }
@@ -65,7 +65,7 @@ const Templates = () => {
 
     const handleSave = async () => {
         if (!name.trim()) {
-            toast({ variant: "destructive", title: "Name is required" });
+            toast({ variant: "destructive", title: "Nama wajib diisi" });
             return;
         }
 
@@ -75,35 +75,35 @@ const Templates = () => {
                 const { error } = await supabase.from("event_templates").update({ name, description, image_url: imageUrl }).eq("id", editingTemplate.id);
 
                 if (error) throw error;
-                toast({ title: "Template updated" });
+                toast({ title: "Template diperbarui" });
             } else {
                 const { error } = await supabase.from("event_templates").insert({ name, description, image_url: imageUrl });
 
                 if (error) throw error;
-                toast({ title: "Template created" });
+                toast({ title: "Template dibuat" });
             }
 
             setIsDialogOpen(false);
             fetchTemplates();
         } catch (error) {
             console.error("Error saving template:", error);
-            toast({ variant: "destructive", title: "Error saving template" });
+            toast({ variant: "destructive", title: "Gagal menyimpan template" });
         } finally {
             setIsSaving(false);
         }
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this template?")) return;
+        if (!confirm("Apakah Anda yakin ingin menghapus template ini?")) return;
 
         try {
             const { error } = await supabase.from("event_templates").delete().eq("id", id);
             if (error) throw error;
-            toast({ title: "Template deleted" });
+            toast({ title: "Template dihapus" });
             fetchTemplates();
         } catch (error) {
             console.error("Error deleting template:", error);
-            toast({ variant: "destructive", title: "Error deleting template" });
+            toast({ variant: "destructive", title: "Gagal menghapus template" });
         }
     };
 
@@ -111,41 +111,41 @@ const Templates = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold">Templates</h1>
-                    <p className="text-muted-foreground">Manage event templates</p>
+                    <h1 className="text-3xl font-bold">Template</h1>
+                    <p className="text-muted-foreground">Kelola template acara</p>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button onClick={() => openDialog()}>
                             <Plus className="mr-2 h-4 w-4" />
-                            Add Template
+                            Tambah Template
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-md">
                         <DialogHeader>
-                            <DialogTitle>{editingTemplate ? "Edit Template" : "Add Template"}</DialogTitle>
+                            <DialogTitle>{editingTemplate ? "Edit Template" : "Tambah Template"}</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <Label>Image</Label>
+                                <Label>Gambar</Label>
                                 <ImageUpload value={imageUrl} onChange={setImageUrl} folder="templates" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Template name" />
+                                <Label htmlFor="name">Nama</Label>
+                                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama template" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Template description" rows={3} />
+                                <Label htmlFor="description">Deskripsi</Label>
+                                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Deskripsi template" rows={3} />
                             </div>
                             <Button onClick={handleSave} className="w-full" disabled={isSaving}>
                                 {isSaving ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Saving...
+                                        Menyimpan...
                                     </>
                                 ) : (
-                                    "Save"
+                                    "Simpan"
                                 )}
                             </Button>
                         </div>
@@ -155,7 +155,7 @@ const Templates = () => {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Templates</CardTitle>
+                    <CardTitle>Semua Template</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isLoading ? (
@@ -163,15 +163,15 @@ const Templates = () => {
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
                     ) : templates.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No templates yet. Create your first template.</p>
+                        <p className="text-center py-8 text-muted-foreground">Belum ada template. Buat template pertama Anda.</p>
                     ) : (
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[60px]">Image</TableHead>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead className="w-[100px]">Actions</TableHead>
+                                    <TableHead className="w-[60px]">Gambar</TableHead>
+                                    <TableHead>Nama</TableHead>
+                                    <TableHead>Deskripsi</TableHead>
+                                    <TableHead className="w-[100px]">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
